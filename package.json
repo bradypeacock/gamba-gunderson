@@ -1,0 +1,30 @@
+{
+  "name": "dcbot",
+  "version": "1.0.0",
+  "description": "Discord Gamba Bot",
+  "main": "index.js",
+  "dependencies": {
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.23.1",
+    "discord-buttons": "^4.0.0",
+    "discord.js": "^13.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bradypeacock/gamba-gunderson.git"
+  },
+  "author": "Brady Peacock",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bradypeacock/gamba-gunderson/issues"
+  },
+  "homepage": "https://github.com/bradypeacock/gamba-gunderson#readme",
+  "keywords": [],
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  }
+}
