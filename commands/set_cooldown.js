@@ -45,6 +45,6 @@ module.exports = {
 		const embed = new MessageEmbed()
 			.setColor('#00ff00')
 			.setDescription(`Cooldown for game \`${game}\` has been set to ${cooldown}.`);
-		await interaction.reply({ embeds: [embed], ephemeral: true });
+		await interaction.reply({ embeds: [embed] });
 	},
 };

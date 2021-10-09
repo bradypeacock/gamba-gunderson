@@ -57,6 +57,6 @@ module.exports = {
 		const embed = new MessageEmbed()
 			.setColor('#00ff00')
 			.setDescription(`Daily reward has been set to the range of ${min} ${currency_emoji} to ${max} ${currency_emoji}`);
-		await interaction.reply({ embeds: [embed], ephemeral: true });
+		await interaction.reply({ embeds: [embed] });
 	},
 };

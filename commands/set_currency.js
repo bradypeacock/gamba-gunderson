@@ -32,6 +32,6 @@ module.exports = {
 		const embed = new MessageEmbed()
 			.setColor('#00ff00')
 			.setDescription(`Currency has been set to ${name} ${emoji}`);
-		await interaction.reply({ embeds: [embed], ephemeral: true });
+		await interaction.reply({ embeds: [embed] });
 	},
 };

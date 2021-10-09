@@ -37,6 +37,6 @@ module.exports = {
 		const embed = new MessageEmbed()
 			.setColor('#00ff00')
 			.setDescription(`${target.username}#${target.discriminator} has received **${amount}** ${currency_emoji}. New balance: **${users.getBalance(target.id)}** ${currency_emoji}`);
-		await interaction.reply({ embeds: [embed], ephemeral: true });
+		await interaction.reply({ embeds: [embed] });
 	},
 };

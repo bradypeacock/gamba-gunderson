@@ -45,6 +45,6 @@ module.exports = {
 		const embed = new MessageEmbed()
 			.setColor('#00ff00')
 			.setDescription(`Removed **${amount}** ${currency_emoji} from ${target.username}#${target.discriminator}. New balance: **${users.getBalance(target.id)}** ${currency_emoji}`);
-		await interaction.reply({ embeds: [embed], ephemeral: true });
+		await interaction.reply({ embeds: [embed] });
 	},
 };
