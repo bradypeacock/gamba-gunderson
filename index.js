@@ -4,7 +4,8 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const allIntents = new Intents(32767);
+const client = new Client({ intents: allIntents });
 
 // Read command files and set commands
 client.commands = new Collection();
