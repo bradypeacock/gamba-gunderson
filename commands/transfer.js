@@ -10,55 +10,65 @@ module.exports = {
 		.addUserOption(option => option.setName('member').setDescription('Member').setRequired(true)),
 	async execute(interaction)
 	{
-		if (await users.getPlaying(interaction.user.id) == 1)
+		try
 		{
-			return interaction.reply({ content: `:no_entry_sign: **${interaction.user.username}**, you are already in the middle of an action`, ephemeral: true });
-		}
-		else
-		{
-			await users.setPlaying(interaction.user.id, 1);
-		}
+			if (await users.getPlaying(interaction.user.id) == 1)
+			{
+				return interaction.reply({ content: `:no_entry_sign: **${interaction.user.username}**, you are already in the middle of an action`, ephemeral: true });
+			}
+			else
+			{
+				await users.setPlaying(interaction.user.id, 1);
+			}
 
-		const currency_emoji = await game_info.get(1).emoji;
+			const currency_emoji = await game_info.get(1).emoji;
 
-		const target = await interaction.options.getUser('member');
-		const coins = users.getBalance(interaction.user.id);
-		const amount = await interaction.options.getInteger('amount');
+			const target = await interaction.options.getUser('member');
+			const coins = users.getBalance(interaction.user.id);
+			const amount = await interaction.options.getInteger('amount');
 
-		if (amount > coins)
-		{
+			if (amount > coins)
+			{
+				const embed = new MessageEmbed()
+					.setColor('#ff0000')
+					.setDescription(`Sorry ${interaction.user}, you only have **${coins}** ${currency_emoji}.`);
+				await users.setPlaying(interaction.user.id, 0);
+				return interaction.reply({ embeds: [embed] });
+			}
+			if (amount <= 0)
+			{
+				const embed = new MessageEmbed()
+					.setColor('#ff0000')
+					.setDescription(`Please enter an amount greater than zero, ${interaction.user}.`);
+				await users.setPlaying(interaction.user.id, 0);
+				return interaction.reply({ embeds: [embed] });
+			}
+
+			if (target.id == interaction.user.id)
+			{
+				const embed = new MessageEmbed()
+					.setColor('#ff0000')
+					.setDescription(`You cannot transfer coins to yourself, ${interaction.user}.`);
+				await users.setPlaying(interaction.user.id, 0);
+				return interaction.reply({ embeds: [embed] });
+			}
+
+			await users.add(interaction.user.id, -amount);
+			await users.add(target.id, amount);
+
 			const embed = new MessageEmbed()
-				.setColor('#ff0000')
-				.setDescription(`Sorry ${interaction.user}, you only have **${coins}** ${currency_emoji}.`);
+				.setColor('#00ff00')
+				.setDescription(`Successfully transferred **${amount}** ${currency_emoji} to **${target.tag}**. Your current balance is **${users.getBalance(interaction.user.id)}** ${currency_emoji}`);
+
 			await users.setPlaying(interaction.user.id, 0);
 			return interaction.reply({ embeds: [embed] });
 		}
-		if (amount <= 0)
+		catch
 		{
-			const embed = new MessageEmbed()
-				.setColor('#ff0000')
-				.setDescription(`Please enter an amount greater than zero, ${interaction.user}.`);
-			await users.setPlaying(interaction.user.id, 0);
-			return interaction.reply({ embeds: [embed] });
+			users.every(async user =>
+			{
+				await users.setPlaying(user.id, 0);
+			});
 		}
-
-		if (target.id == interaction.user.id)
-		{
-			const embed = new MessageEmbed()
-				.setColor('#ff0000')
-				.setDescription(`You cannot transfer coins to yourself, ${interaction.user}.`);
-			await users.setPlaying(interaction.user.id, 0);
-			return interaction.reply({ embeds: [embed] });
-		}
-
-		await users.add(interaction.user.id, -amount);
-		await users.add(target.id, amount);
-
-		const embed = new MessageEmbed()
-			.setColor('#00ff00')
-			.setDescription(`Successfully transferred **${amount}** ${currency_emoji} to **${target.tag}**. Your current balance is **${users.getBalance(interaction.user.id)}** ${currency_emoji}`);
-
-		await users.setPlaying(interaction.user.id, 0);
-		return interaction.reply({ embeds: [embed] });
 	},
 };
