@@ -20,6 +20,8 @@ const rest = new REST({ version: '9' }).setToken(token);
 	{
 		console.log('Started refreshing application (/) commands.');
 
+		console.log(commands);
+
 		await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: commands },
