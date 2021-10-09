@@ -58,8 +58,15 @@ module.exports = {
 			// If it's the same day since they last claimed
 			if ((daily_claimed.getDate() == date.getDate()) && (daily_claimed.getMonth() == date.getMonth()) && (daily_claimed.getFullYear() == date.getFullYear()))
 			{
-				const hours = 23 - date.getHours();
-				const minutes = 60 - date.getMinutes();
+				let hours = 23 - date.getHours();
+				let minutes = 60 - date.getMinutes();
+
+				if (minutes == 60)
+				{
+					hours++;
+					minutes = 0;
+				}
+
 				let desc = '';
 				const plural_h = (hours > 1 ? 'hours' : 'hour');
 				const plural_m = (minutes > 1 ? 'minutes' : 'minute');
@@ -67,10 +74,15 @@ module.exports = {
 				{
 					desc = `${interaction.user} you can't claim more than once per day. You need to wait **${minutes} ${plural_m}** to claim again.`;
 				}
+				else if (minutes == 0)
+				{
+					desc = `${interaction.user} you can't claim more than once per day. You need to wait **${hours} ${plural_h}** to claim again.`;
+				}
 				else
 				{
 					desc = `${interaction.user} you can't claim more than once per day. You need to wait **${hours} ${plural_h} and ${minutes} ${plural_m}** to claim again.`;
 				}
+
 				const embed = new MessageEmbed()
 					.setColor('#ff0000')
 					.setDescription(desc);
