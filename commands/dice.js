@@ -13,8 +13,8 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('dice')
 		.setDescription('Bet on a dice roll')
-		.addIntegerOption(option => option.setName('amount').setDescription('Bet amount').setRequired(true))
-		.addUserOption(option => option.setName('opponent').setDescription('Optional user opponent').setRequired(false)),
+		.addIntegerOption(option => option.setName('amount').setDescription('Bet amount').setRequired(true)),
+	// .addUserOption(option => option.setName('opponent').setDescription('Optional user opponent').setRequired(false)),
 	async execute(interaction)
 	{
 		if (await users.getPlaying(interaction.user.id) == 1)
@@ -66,8 +66,9 @@ module.exports = {
 			return interaction.reply({ embeds: [embed] });
 		}
 
-		const opponent = interaction.options.getUser('opponent');
-		interaction.client.opponent = opponent;
+		// const opponent = interaction.options.getUser('opponent');
+		// interaction.client.opponent = opponent;
+		const opponent = false;
 
 		// Player dice data
 		const p_r1 = roll();
