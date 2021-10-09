@@ -19,11 +19,9 @@ module.exports = {
 
 		const max_bet = await game_info.get(1).max_bet;
 
-		let gamble_field = { name: ':slot_machine: Gamble', value: `You can gamble up to **${max_bet}** ${currency_emoji} for each game.` };
-		if (max_bet == 0)
-		{
-			gamble_field = { name: ':slot_machine: Gamble', value: 'There is no maximum bet, go crazy!' };
-		}
+		const gamble_field = (max_bet) ?
+			{ name: ':slot_machine: Gamble', value: `You can gamble up to **${max_bet}** ${currency_emoji} for each game.` } :
+			{ name: ':slot_machine: Gamble', value: 'There is no maximum bet, go crazy!' };
 
 		const embed = new MessageEmbed()
 			.setColor('#0099ff')
