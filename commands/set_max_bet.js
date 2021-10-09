@@ -21,7 +21,7 @@ module.exports = {
 		const info = await game_info.get(1);
 		const currency_emoji = info.emoji;
 
-		const max = interaction.options.getInteger('amount');
+		const max = await interaction.options.getInteger('amount');
 
 		if (max < 0)
 		{

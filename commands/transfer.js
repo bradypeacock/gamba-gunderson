@@ -21,9 +21,9 @@ module.exports = {
 
 		const currency_emoji = await game_info.get(1).emoji;
 
-		const target = interaction.options.getUser('member');
+		const target = await interaction.options.getUser('member');
 		const coins = users.getBalance(interaction.user.id);
-		const amount = interaction.options.getInteger('amount');
+		const amount = await interaction.options.getInteger('amount');
 
 		if (amount > coins)
 		{

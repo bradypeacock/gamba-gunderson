@@ -40,7 +40,7 @@ module.exports = {
 			return interaction.reply(`:no_entry_sign: **${interaction.user.username}**, you need to wait ${timeLeft / 1000} seconds to use that command again.`);
 		}
 
-		const amount = interaction.options.getInteger('amount');
+		const amount = await interaction.options.getInteger('amount');
 		if (amount == 0)
 		{
 			await users.setPlaying(interaction.user.id, 0);

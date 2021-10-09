@@ -21,8 +21,8 @@ module.exports = {
 
 		const info = await game_info.get(1);
 
-		const name = interaction.options.getString('name');
-		const emoji = interaction.options.getString('symbol');
+		const name = await interaction.options.getString('name');
+		const emoji = await interaction.options.getString('symbol');
 
 		info.name = name;
 		info.emoji = emoji;

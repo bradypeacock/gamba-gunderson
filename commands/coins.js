@@ -11,7 +11,7 @@ module.exports = {
 	{
 		const currency_emoji = await game_info.get(1).emoji;
 
-		const target = interaction.options.getUser('member') ?? interaction.user;
+		const target = await interaction.options.getUser('member') ?? interaction.user;
 		const coins = await users.getBalance(target.id);
 
 		const embed = new MessageEmbed()

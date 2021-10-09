@@ -22,8 +22,8 @@ module.exports = {
 		const info = await game_info.get(1);
 		const currency_emoji = info.emoji;
 
-		const min = interaction.options.getInteger('min');
-		const max = interaction.options.getInteger('max');
+		const min = await interaction.options.getInteger('min');
+		const max = await interaction.options.getInteger('max');
 
 		if (min < 0)
 		{
