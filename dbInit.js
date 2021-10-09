@@ -14,7 +14,11 @@ const force = process.argv.includes('--force') || process.argv.includes('-f');
 
 sequelize.sync({ force }).then(async () =>
 {
-	await Promise.all([ GameInfo.create({}) ]);
+	await GameInfo.findAndCountAll({}).then(async result =>
+	{
+		if (result.count == 0) await Promise.all([ GameInfo.create({}) ]);
+		else await Promise.all([]);
+	});
 
 	console.log('Database synced');
 	sequelize.close();
