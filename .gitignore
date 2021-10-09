@@ -3,3 +3,6 @@
 .env
 *.log
 config.json
+database.sqlite
+dbAddColumn.js
+dbRemoveColumn.js
