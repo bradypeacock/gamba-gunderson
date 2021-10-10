@@ -30,7 +30,11 @@ module.exports = {
 			}
 
 			let dice_cd_text = '';
-			if (dice_cd_sec == 0)
+			if (dice_cd_min == 0 && dice_cd_sec == 0)
+			{
+				dice_cd_text = 'No cooldown! Go wild!';
+			}
+			else if (dice_cd_sec == 0)
 			{
 				dice_cd_text = `${dice_cd_min}m`;
 			}
