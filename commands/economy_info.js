@@ -30,10 +30,10 @@ module.exports = {
 				.setTitle(`${interaction.guild.name} Economy`)
 				.addFields(
 					{ name: ':dollar: Currency', value: `${currency_name} ${currency_emoji}` },
-					{ name: ':moneybag: Daily Claim', value: `You can claim **once a day** using the command \`/daily\` and the reward can vary from **${daily_min}** ${currency_emoji} to **${daily_max}** ${currency_emoji}.
-															Claim on consecutive days to earn a streak bonus (**x4** for **7 days** in a row).` },
-					{ name: ':credit_card: Work', value: `You can claim a **paycheck once per hour** using the command \`/work\` and the value can vary from **${work_min}** ${currency_emoji} to **${work_max}** ${currency_emoji}.
-														Claim your paycheck and start another shift by typing \`/work\` again.` },
+					{ name: ':moneybag: Daily Claim', value: `You can claim **once a day** using the command \`/daily\` and the reward can vary from **${daily_min}** ${currency_emoji} to **${daily_max}** ${currency_emoji}.\n` +
+						'Claim on consecutive days to earn a streak bonus (**x4** for **7 days** in a row).' },
+					{ name: ':credit_card: Work', value: `You can claim a **paycheck once per hour** using the command \`/work\` and the value can vary from **${work_min}** ${currency_emoji} to **${work_max}** ${currency_emoji}.\n` +
+						'Claim your paycheck and start another shift by typing `/work` again.' },
 					gamble_field,
 				);
 			await interaction.reply({ embeds: [embed] });
