@@ -14,7 +14,8 @@ module.exports = {
 
 			// Get server total by adding up all balances
 			let total = 0;
-			users.every(b => total += b.balance);
+			const [cached] = users.partition(user => interaction.client.users.cache.has(user.user_id));
+			cached.every(b => total += b.balance);
 
 			// Sort all balances and grab the top 10
 			const list = users.sort((a, b) => b.balance - a.balance)
