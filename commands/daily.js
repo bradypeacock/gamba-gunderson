@@ -28,7 +28,9 @@ module.exports = {
 
 			let streak = await users.getStreak(interaction.user.id);
 			let streak_bonus = 1;
+			let streak_continued = false;
 
+			// Not first time claiming
 			if (daily_claimed)
 			{
 				// Find out if the streak has been continued or not and act accordingly
@@ -37,16 +39,14 @@ module.exports = {
 				lastDate.setDate(daily_claimed.getDate() + 1);
 				// If 'lastDate' is equal to today, then the last time we got our daily was yesterday, meaning our streak will continue
 				// Otherwise, it wasn't yesterday and we broke the streak
-				const streak_continued = (lastDate.getDate() == date.getDate()) && (lastDate.getMonth() == date.getMonth()) && (lastDate.getFullYear() == date.getFullYear());
+				streak_continued = (lastDate.getDate() == date.getDate()) && (lastDate.getMonth() == date.getMonth()) && (lastDate.getFullYear() == date.getFullYear());
 				if (streak_continued)
 				{
-					await users.incStreak(interaction.user.id);
 					// 0.5x reward per daily streak for a max of 4x at 7 days
 					streak_bonus = 1 + 0.5 * ((streak > 7 ? 7 : streak) - 1);
 				}
 				else
 				{
-					await users.resetStreak(interaction.user.id);
 					streak = 1;
 				}
 			}
@@ -108,6 +108,8 @@ module.exports = {
 					await interaction.reply({ embeds: [embed] });
 					await users.add(interaction.user.id, reward);
 					await users.setDaily(interaction.user.id, date);
+					if (!streak_continued) await users.resetStreak(interaction.user.id);
+					await users.incStreak(interaction.user.id);
 				}
 			}
 			// First time claiming
@@ -126,7 +128,10 @@ module.exports = {
 		}
 		catch
 		{
-			await users.setPlaying(interaction.user.id, 0);
+			users.every(async user =>
+			{
+				await users.setPlaying(user.id, 0);
+			});
 		}
 	},
 };
