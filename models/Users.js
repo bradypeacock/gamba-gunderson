@@ -20,12 +20,17 @@ module.exports = (sequelize, DataTypes) =>
 			defaultValue: 1,
 			allowNull: false,
 		},
+		work_cd: {
+			type: DataTypes.FLOAT,
+			defaultValue: 0,
+			allowNull: false,
+		},
 		dice_cd: {
 			type: DataTypes.FLOAT,
 			defaultValue: 0,
 			allowNull: false,
 		},
-		work_cd: {
+		rps_cd: {
 			type: DataTypes.FLOAT,
 			defaultValue: 0,
 			allowNull: false,

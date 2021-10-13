@@ -53,6 +53,11 @@ Reflect.defineProperty(users, 'setCooldown', {
 				user.dice_cd = cooldown;
 				return user.save();
 			}
+			else if (func == 'rps')
+			{
+				user.rps_cd = cooldown;
+				return user.save();
+			}
 			else if (func == 'work')
 			{
 				user.work_cd = cooldown;
@@ -69,6 +74,10 @@ Reflect.defineProperty(users, 'setCooldown', {
 		if (func == 'dice')
 		{
 			newUser = await Users.create({ user_id: id, dice_cd: cooldown });
+		}
+		else if (func == 'rps')
+		{
+			newUser = await Users.create({ user_id: id, rps_cd: cooldown });
 		}
 		else if (func == 'work')
 		{
@@ -96,6 +105,10 @@ Reflect.defineProperty(users, 'getCooldown', {
 			if (func == 'dice')
 			{
 				return user.dice_cd;
+			}
+			else if (func == 'rps')
+			{
+				return user.rps_cd;
 			}
 			else if (func == 'work')
 			{

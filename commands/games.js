@@ -52,6 +52,39 @@ module.exports = {
 				'*gains: from x1 to x3 depending on your dice*\n' +
 				`*cooldown: ${dice_cd_text}*` });
 
+			// Rock, Paper, Scissors
+			const rps_cd = await game_info.get(1).rps_cooldown;
+			let rps_cd_min = 0;
+			let rps_cd_sec = rps_cd;
+			if (rps_cd >= 60)
+			{
+				rps_cd_min = Math.floor(rps_cd / 60);
+				rps_cd_sec = rps_cd - (rps_cd_min * 60);
+			}
+
+			let rps_cd_text = '';
+			if (rps_cd_min == 0 && rps_cd_sec == 0)
+			{
+				rps_cd_text = 'No cooldown! Go wild!';
+			}
+			else if (rps_cd_sec == 0)
+			{
+				rps_cd_text = `${rps_cd_min}m`;
+			}
+			else if (rps_cd_min == 0)
+			{
+				rps_cd_text = `${rps_cd_sec}s`;
+			}
+			else
+			{
+				rps_cd_text = `${rps_cd_min}m${rps_cd_sec}s`;
+			}
+
+			fields.push({ name: 'Rock, Paper, Scissors', value: '`/rps <amount> <sign>`\n' +
+				'Win at rock paper scissors against your opponent to gain your bet\n' +
+				'*gains: x1*\n' +
+				`*cooldown: ${rps_cd_text}*` });
+
 			// Add new games here
 
 			const embed = new MessageEmbed()

@@ -4,16 +4,29 @@ const { sleep } = require('../sleep.js');
 const { random } = require('../random.js');
 const { users, game_info } = require('../dbObjects.js');
 
-function roll()
+const ROCK = 0;
+const PAPER = 1;
+const SCISSORS = 2;
+
+const rps_map =
 {
-	return random(1, 6);
-}
+	'rock': ROCK,
+	'paper': PAPER,
+	'scissors': SCISSORS,
+};
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('dice')
-		.setDescription('Bet on a dice roll')
-		.addIntegerOption(option => option.setName('amount').setDescription('Bet amount').setRequired(true)),
+		.setName('rps')
+		.setDescription('Bet on rock/paper/scissors')
+		.addIntegerOption(option => option.setName('amount').setDescription('Bet amount').setRequired(true))
+		.addStringOption(option =>
+			option.setName('sign')
+				.setDescription('Rock, Paper, or Scissors')
+				.setRequired(true)
+				.addChoice('rock', 'rock')
+				.addChoice('paper', 'paper')
+				.addChoice('scissors', 'scissors')),
 	// .addUserOption(option => option.setName('opponent').setDescription('Optional user opponent').setRequired(false)),
 	async execute(interaction)
 	{
@@ -31,9 +44,9 @@ module.exports = {
 			const currency_emoji = await game_info.get(1).emoji;
 			const max_bet = await game_info.get(1).max_bet;
 			// convert cooldown from seconds to milliseconds
-			const cooldown = await game_info.get(1).dice_cooldown * 1000;
+			const cooldown = await game_info.get(1).rps_cooldown * 1000;
 
-			const lastUse = await users.getCooldown(interaction.user.id, 'dice');
+			const lastUse = await users.getCooldown(interaction.user.id, 'rps');
 			const timeLeft = cooldown - (Date.now() - lastUse);
 			if (lastUse !== null && timeLeft > 0)
 			{
@@ -80,17 +93,14 @@ module.exports = {
 			// interaction.client.opponent = opponent;
 			const opponent = false;
 
-			const game_emoji = ':game_die:';
+			const game_emoji = ':rock::page_facing_up::scissors:';
+			const rps_emojis = [':right_fist: (rock)', ':raised_hand: (paper)', ':v: (scissors)'];
 
-			// Player dice data
-			const p_r1 = roll();
-			const p_r2 = roll();
-			const p_tot = p_r1 + p_r2;
+			// Player rps sign
+			const p_rps = rps_map[await interaction.options.getString('sign')];
 
-			// Opponent dice data
-			const o_r1 = roll();
-			const o_r2 = roll();
-			const o_tot = o_r1 + o_r2;
+			// Opponent rps sign
+			const o_rps = await random(ROCK, SCISSORS);
 
 			if (opponent)
 			{
@@ -110,45 +120,49 @@ module.exports = {
 			}
 			else
 			{
-				await interaction.reply(`${game_emoji} ${interaction.user.username} bets ${amount} ${currency_emoji} and rolls their dice...`);
+				await interaction.reply(`${game_emoji} ${interaction.user.username} bets ${amount} ${currency_emoji}. Rock, paper, scissors...`);
 				await sleep(2000);
-				await interaction.channel.send(`${game_emoji} ${interaction.user.username} gets **${p_r1}** and **${p_r2}**...`);
+				await interaction.channel.send(`${game_emoji} GO! ${interaction.user.username} plays ${rps_emojis[p_rps]}, their opponent plays ${rps_emojis[o_rps]}`);
 				await sleep(2000);
-				if (p_tot == 12)
+				if (p_rps == o_rps)
 				{
-					await interaction.channel.send(`${game_emoji} :astonished: ${interaction.user.username} rolls **two 6s**! Their opponent is afraid and gives up. ${interaction.user.username} won ${amount * 3} ${currency_emoji}!`);
-					await users.add(interaction.user.id, amount * 3);
+					await interaction.channel.send(`${game_emoji} ${interaction.user.username}, it's a **draw**, you get back ${amount} ${currency_emoji}`);
 				}
-				else
+				// Player win conditions
+				else if (p_rps == ROCK && o_rps == SCISSORS)
 				{
-					await interaction.channel.send(`${game_emoji} ${interaction.user.username}, your opponent rolls their dice and gets **${o_r1}** and **${o_r2}**...`);
-					await sleep(2000);
-					if (p_tot > o_tot)
-					{
-						if (p_r1 == p_r2)
-						{
-							await interaction.channel.send(`${game_emoji} ${interaction.user.username}, you rolled a double and **won** twice your bet: ${amount * 2} ${currency_emoji}`);
-							await users.add(interaction.user.id, amount * 2);
-						}
-						else
-						{
-							await interaction.channel.send(`${game_emoji} ${interaction.user.username}, you **won** ${amount} ${currency_emoji}!`);
-							await users.add(interaction.user.id, amount);
-						}
-					}
-					else if (p_tot < o_tot)
-					{
-						await interaction.channel.send(`${game_emoji} ${interaction.user.username}, you **lost** ${amount} ${currency_emoji}`);
-						await users.add(interaction.user.id, -amount);
-					}
-					else
-					{
-						await interaction.channel.send(`${game_emoji} ${interaction.user.username}, it's a draw, you get back ${amount} ${currency_emoji}`);
-					}
+					await interaction.channel.send(`${game_emoji} Rock destroys scissors, ${interaction.user.username} **won** ${amount} ${currency_emoji}!`);
+					await users.add(interaction.user.id, amount);
+				}
+				else if (p_rps == PAPER && o_rps == ROCK)
+				{
+					await interaction.channel.send(`${game_emoji} Paper covers rock, ${interaction.user.username} **won** ${amount} ${currency_emoji}!`);
+					await users.add(interaction.user.id, amount);
+				}
+				else if (p_rps == SCISSORS && o_rps == PAPER)
+				{
+					await interaction.channel.send(`${game_emoji} Scissors cut paper, ${interaction.user.username} **won** ${amount} ${currency_emoji}!`);
+					await users.add(interaction.user.id, amount);
+				}
+				// Opponent win conditions
+				else if (p_rps == ROCK && o_rps == PAPER)
+				{
+					await interaction.channel.send(`${game_emoji} Paper covers rock, ${interaction.user.username} **lost** ${amount} ${currency_emoji}`);
+					await users.add(interaction.user.id, -amount);
+				}
+				else if (p_rps == PAPER && o_rps == SCISSORS)
+				{
+					await interaction.channel.send(`${game_emoji} Scissors cut paper, ${interaction.user.username} **lost** ${amount} ${currency_emoji}`);
+					await users.add(interaction.user.id, -amount);
+				}
+				else if (p_rps == SCISSORS && o_rps == ROCK)
+				{
+					await interaction.channel.send(`${game_emoji} Rock destroys scissors, ${interaction.user.username} **lost** ${amount} ${currency_emoji}`);
+					await users.add(interaction.user.id, -amount);
 				}
 			}
 
-			await users.setCooldown(interaction.user.id, 'dice', Date.now());
+			await users.setCooldown(interaction.user.id, 'rps', Date.now());
 			await users.setPlaying(interaction.user.id, 0);
 		}
 		catch
