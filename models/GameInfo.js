@@ -25,6 +25,16 @@ module.exports = (sequelize, DataTypes) =>
 			defaultValue: 10,
 			allowNull: false,
 		},
+		guess_cooldown: {
+			type: DataTypes.INTEGER,
+			defaultValue: 10,
+			allowNull: false,
+		},
+		roulette_cooldown: {
+			type: DataTypes.INTEGER,
+			defaultValue: 10,
+			allowNull: false,
+		},
 		daily_min: {
 			type: DataTypes.INTEGER,
 			defaultValue: 200,

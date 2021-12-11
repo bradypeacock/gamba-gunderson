@@ -80,10 +80,77 @@ module.exports = {
 				rps_cd_text = `${rps_cd_min}m${rps_cd_sec}s`;
 			}
 
-			fields.push({ name: 'Rock, Paper, Scissors', value: '`/rps <amount> <sign>`\n' +
+			fields.push({ name: 'Rock, Paper, Scissors', value: '`/rps <amount> (optional opponent)>`\n' +
 				'Win at rock paper scissors against your opponent to gain your bet\n' +
 				'*gains: x1*\n' +
 				`*cooldown: ${rps_cd_text}*` });
+
+			// Guess The Number
+			const guess_cd = await game_info.get(1).guess_cooldown;
+			let guess_cd_min = 0;
+			let guess_cd_sec = guess_cd;
+			if (guess_cd >= 60)
+			{
+				guess_cd_min = Math.floor(guess_cd / 60);
+				guess_cd_sec = guess_cd - (guess_cd_min * 60);
+			}
+
+			let guess_cd_text = '';
+			if (guess_cd_min == 0 && guess_cd_sec == 0)
+			{
+				guess_cd_text = 'No cooldown! Go wild!';
+			}
+			else if (guess_cd_sec == 0)
+			{
+				guess_cd_text = `${guess_cd_min}m`;
+			}
+			else if (guess_cd_min == 0)
+			{
+				guess_cd_text = `${guess_cd_sec}s`;
+			}
+			else
+			{
+				guess_cd_text = `${guess_cd_min}m${guess_cd_sec}s`;
+			}
+
+			fields.push({ name: 'Guess The Number', value: '`/guess <amount>`\n' +
+				'Guess the random number between **1** and **100**, in 5 attempts to gain your bet. The less attempts you use, the more you gain (**x10** in one shot).\n' +
+				'*gains: from x0.5 to x10 depending on the attempts*\n' +
+				`*cooldown: ${guess_cd_text}*` });
+
+			// Roulette
+			const roulette_cd = await game_info.get(1).roulette_cooldown;
+			let roulette_cd_min = 0;
+			let roulette_cd_sec = roulette_cd;
+			if (roulette_cd >= 60)
+			{
+				roulette_cd_min = Math.floor(roulette_cd / 60);
+				roulette_cd_sec = roulette_cd - (roulette_cd_min * 60);
+			}
+
+			let roulette_cd_text = '';
+			if (roulette_cd_min == 0 && roulette_cd_sec == 0)
+			{
+				roulette_cd_text = 'No cooldown! Go wild!';
+			}
+			else if (roulette_cd_sec == 0)
+			{
+				roulette_cd_text = `${roulette_cd_min}m`;
+			}
+			else if (roulette_cd_min == 0)
+			{
+				roulette_cd_text = `${roulette_cd_sec}s`;
+			}
+			else
+			{
+				roulette_cd_text = `${roulette_cd_min}m${roulette_cd_sec}s`;
+			}
+
+			fields.push({ name: 'Roulette', value: '`/roulette <amount>`\n' +
+				'Sruvive the roulette game to gain your bet. A 6 bullet revolver is used and the more you replay, the more you gain (x4 if you survive 5 shots). ' +
+				'Answer `continue` to move to the next round and increase your gain... at your own risk.\n' +
+				'*gains: from x1 to x4 depending on the round you reach*\n' +
+				`*cooldown: ${roulette_cd_text}*` });
 
 			// Add new games here
 

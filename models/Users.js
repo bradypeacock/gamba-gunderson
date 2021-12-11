@@ -35,6 +35,16 @@ module.exports = (sequelize, DataTypes) =>
 			defaultValue: 0,
 			allowNull: false,
 		},
+		guess_cd: {
+			type: DataTypes.FLOAT,
+			defaultValue: 0,
+			allowNull: false,
+		},
+		roulette_cd: {
+			type: DataTypes.FLOAT,
+			defaultValue: 0,
+			allowNull: false,
+		},
 		paycheck: {
 			type: DataTypes.INTEGER,
 			defaultValue: 0,

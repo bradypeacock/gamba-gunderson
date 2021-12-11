@@ -12,7 +12,9 @@ module.exports = {
 				.setDescription('The game to set the cooldown of')
 				.setRequired(true)
 				.addChoice('dice', 'dice')
-				.addChoice('rps', 'rps')),
+				.addChoice('rps', 'rps')
+				.addChoice('guess', 'guess')
+				.addChoice('roulette', 'roulette')),
 	async execute(interaction)
 	{
 		try
@@ -45,6 +47,14 @@ module.exports = {
 			else if (game == 'rps')
 			{
 				info.rps_cooldown = cooldown;
+			}
+			else if (game == 'guess')
+			{
+				info.guess_cooldown = cooldown;
+			}
+			else if (game == 'roulette')
+			{
+				info.roulette_cooldown = cooldown;
 			}
 
 			await info.save();

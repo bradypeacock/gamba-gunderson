@@ -58,6 +58,16 @@ Reflect.defineProperty(users, 'setCooldown', {
 				user.rps_cd = cooldown;
 				return user.save();
 			}
+			else if (func == 'guess')
+			{
+				user.guess_cd = cooldown;
+				return user.save();
+			}
+			else if (func == 'roulette')
+			{
+				user.roulette_cd = cooldown;
+				return user.save();
+			}
 			else if (func == 'work')
 			{
 				user.work_cd = cooldown;
@@ -78,6 +88,14 @@ Reflect.defineProperty(users, 'setCooldown', {
 		else if (func == 'rps')
 		{
 			newUser = await Users.create({ user_id: id, rps_cd: cooldown });
+		}
+		else if (func == 'guess')
+		{
+			newUser = await Users.create({ user_id: id, guess_cd: cooldown });
+		}
+		else if (func == 'roulette')
+		{
+			newUser = await Users.create({ user_id: id, roulette_cd: cooldown });
 		}
 		else if (func == 'work')
 		{
@@ -109,6 +127,14 @@ Reflect.defineProperty(users, 'getCooldown', {
 			else if (func == 'rps')
 			{
 				return user.rps_cd;
+			}
+			else if (func == 'guess')
+			{
+				return user.guess_cd;
+			}
+			else if (func == 'roulette')
+			{
+				return user.roulette_cd;
 			}
 			else if (func == 'work')
 			{
