@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { sleep } = require('../sleep.js');
 const { random } = require('../random.js');
 const { users, game_info } = require('../dbObjects.js');
@@ -14,7 +14,6 @@ module.exports = {
 		.setName('dice')
 		.setDescription('Bet on a dice roll')
 		.addIntegerOption(option => option.setName('amount').setDescription('Bet amount').setRequired(true)),
-	// .addUserOption(option => option.setName('opponent').setDescription('Optional user opponent').setRequired(false)),
 	async execute(interaction)
 	{
 		try
@@ -76,10 +75,6 @@ module.exports = {
 				return interaction.reply({ embeds: [embed] });
 			}
 
-			// const opponent = interaction.options.getUser('opponent');
-			// interaction.client.opponent = opponent;
-			const opponent = false;
-
 			const game_emoji = ':game_die:';
 
 			// Player dice data
@@ -92,59 +87,40 @@ module.exports = {
 			const o_r2 = roll();
 			const o_tot = o_r1 + o_r2;
 
-			if (opponent)
+			await interaction.reply(`${game_emoji} ${interaction.user.username} bets ${amount} ${currency_emoji} and rolls their dice...`);
+			await sleep(2000);
+			await interaction.channel.send(`${game_emoji} ${interaction.user.username} gets **${p_r1}** and **${p_r2}**...`);
+			await sleep(2000);
+			if (p_tot == 12)
 			{
-				const row = new MessageActionRow()
-					.addComponents(
-						new MessageButton()
-							.setCustomId('accept')
-							.setLabel('Accept')
-							.setStyle('SUCCESS'),
-						new MessageButton()
-							.setCustomId('decline')
-							.setLabel('Decline')
-							.setStyle('DANGER'),
-					);
-				await interaction.reply(`${game_emoji} **${interaction.user.username}** has challenged **${opponent.username}** with a bet of **${amount}** ${currency_emoji}.`);
-				await interaction.channel.send({ content: `${opponent}, do you accept?`, components: [row] });
+				await interaction.channel.send(`${game_emoji} :astonished: ${interaction.user.username} rolls **two 6s**! Their opponent is afraid and gives up. ${interaction.user.username} won ${amount * 3} ${currency_emoji}!`);
+				await users.add(interaction.user.id, amount * 3);
 			}
 			else
 			{
-				await interaction.reply(`${game_emoji} ${interaction.user.username} bets ${amount} ${currency_emoji} and rolls their dice...`);
+				await interaction.channel.send(`${game_emoji} ${interaction.user.username}, your opponent rolls their dice and gets **${o_r1}** and **${o_r2}**...`);
 				await sleep(2000);
-				await interaction.channel.send(`${game_emoji} ${interaction.user.username} gets **${p_r1}** and **${p_r2}**...`);
-				await sleep(2000);
-				if (p_tot == 12)
+				if (p_tot > o_tot)
 				{
-					await interaction.channel.send(`${game_emoji} :astonished: ${interaction.user.username} rolls **two 6s**! Their opponent is afraid and gives up. ${interaction.user.username} won ${amount * 3} ${currency_emoji}!`);
-					await users.add(interaction.user.id, amount * 3);
-				}
-				else
-				{
-					await interaction.channel.send(`${game_emoji} ${interaction.user.username}, your opponent rolls their dice and gets **${o_r1}** and **${o_r2}**...`);
-					await sleep(2000);
-					if (p_tot > o_tot)
+					if (p_r1 == p_r2)
 					{
-						if (p_r1 == p_r2)
-						{
-							await interaction.channel.send(`${game_emoji} ${interaction.user.username}, you rolled a double and **won** twice your bet: ${amount * 2} ${currency_emoji}`);
-							await users.add(interaction.user.id, amount * 2);
-						}
-						else
-						{
-							await interaction.channel.send(`${game_emoji} ${interaction.user.username}, you **won** ${amount} ${currency_emoji}!`);
-							await users.add(interaction.user.id, amount);
-						}
-					}
-					else if (p_tot < o_tot)
-					{
-						await interaction.channel.send(`${game_emoji} ${interaction.user.username}, you **lost** ${amount} ${currency_emoji}`);
-						await users.add(interaction.user.id, -amount);
+						await interaction.channel.send(`${game_emoji} ${interaction.user.username}, you rolled a double and **won** twice your bet: ${amount * 2} ${currency_emoji}`);
+						await users.add(interaction.user.id, amount * 2);
 					}
 					else
 					{
-						await interaction.channel.send(`${game_emoji} ${interaction.user.username}, it's a draw, you get back ${amount} ${currency_emoji}`);
+						await interaction.channel.send(`${game_emoji} ${interaction.user.username}, you **won** ${amount} ${currency_emoji}!`);
+						await users.add(interaction.user.id, amount);
 					}
+				}
+				else if (p_tot < o_tot)
+				{
+					await interaction.channel.send(`${game_emoji} ${interaction.user.username}, you **lost** ${amount} ${currency_emoji}`);
+					await users.add(interaction.user.id, -amount);
+				}
+				else
+				{
+					await interaction.channel.send(`${game_emoji} ${interaction.user.username}, it's a draw, you get back ${amount} ${currency_emoji}`);
 				}
 			}
 
