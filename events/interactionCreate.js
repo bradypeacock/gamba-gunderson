@@ -20,11 +20,5 @@ module.exports = {
 				interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 			}
 		}
-
-		if (interaction.isButton())
-		{
-			interaction.reply(interaction.user.username + ' has clicked me!');
-			// handle button interactions here
-		}
 	},
 };
