@@ -59,8 +59,9 @@ module.exports = {
 				await interaction.reply(`${interaction.user.username}, you must be able to receive direct messages to get a list of available commands.`);
 			}
 		}
-		catch
+		catch (error)
 		{
+			console.error(error);
 			users.every(async user =>
 			{
 				await users.setPlaying(user.id, 0);

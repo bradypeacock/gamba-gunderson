@@ -61,8 +61,9 @@ module.exports = {
 				.setDescription(`Daily reward has been set to the range of ${min} ${currency_emoji} to ${max} ${currency_emoji}`);
 			await interaction.reply({ embeds: [embed] });
 		}
-		catch
+		catch (error)
 		{
+			console.error(error);
 			users.every(async user =>
 			{
 				await users.setPlaying(user.id, 0);

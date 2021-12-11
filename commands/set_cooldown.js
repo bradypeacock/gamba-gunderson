@@ -54,8 +54,9 @@ module.exports = {
 				.setDescription(`Cooldown for game \`${game}\` has been set to ${cooldown} seconds.`);
 			await interaction.reply({ embeds: [embed] });
 		}
-		catch
+		catch (error)
 		{
+			console.error(error);
 			users.every(async user =>
 			{
 				await users.setPlaying(user.id, 0);

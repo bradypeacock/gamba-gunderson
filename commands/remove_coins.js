@@ -54,8 +54,9 @@ module.exports = {
 				.setDescription(`Removed **${amount}** ${currency_emoji} from ${target.username}#${target.discriminator}. New balance: **${users.getBalance(target.id)}** ${currency_emoji}`);
 			await interaction.reply({ embeds: [embed] });
 		}
-		catch
+		catch (error)
 		{
+			console.error(error);
 			users.every(async user =>
 			{
 				await users.setPlaying(user.id, 0);

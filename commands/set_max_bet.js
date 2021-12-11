@@ -42,8 +42,9 @@ module.exports = {
 				.setDescription(`Maximum bet has been set to ${max} ${currency_emoji}`);
 			await interaction.reply({ embeds: [embed] });
 		}
-		catch
+		catch (error)
 		{
+			console.error(error);
 			users.every(async user =>
 			{
 				await users.setPlaying(user.id, 0);

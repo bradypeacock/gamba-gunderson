@@ -32,8 +32,9 @@ module.exports = {
 
 			await users.setPlaying(interaction.user.id, 0);
 		}
-		catch
+		catch (error)
 		{
+			console.error(error);
 			users.every(async user =>
 			{
 				await users.setPlaying(user.id, 0);

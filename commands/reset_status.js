@@ -29,8 +29,9 @@ module.exports = {
 				.setDescription(`${user}'s status has been reset!`);
 			await interaction.reply({ embeds: [embed], ephemeral: true });
 		}
-		catch
+		catch (error)
 		{
+			console.error(error);
 			users.every(async user =>
 			{
 				await users.setPlaying(user.id, 0);
